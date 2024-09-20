@@ -1,15 +1,12 @@
-"use client"
+"use client";
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
-import { useGSAP } from '@gsap/react'; // Add this import
-import Packages from './Packages';
-import Footer from './Footer';
-import Services from './Services';
-import Tours from './Tours';
 import Link from 'next/link';
 import Destination from '../destination/page';
+import Services from './Services';
+import Tours from './Tours';
 
 const Hero = () => {
   gsap.registerPlugin(ScrollTrigger);
@@ -46,35 +43,15 @@ const Hero = () => {
   ];
 
   useEffect(() => {
-    // Double-check GSAP and ScrollTrigger are properly loaded
     if (!gsap || !ScrollTrigger) {
       console.error("GSAP or ScrollTrigger not loaded");
       return;
     }
 
-    // Ensure the DOM is fully loaded
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", initializeAnimations);
-    } else {
-      initializeAnimations();
-    }
-
     function initializeAnimations() {
       const elements = document.querySelectorAll(".elem");
-      
-      if (elements.length === 0) {
-        console.error("No elements with class 'elem' found");
-        return;
-      }
-
       elements.forEach((elem) => {
-        const image = elem.querySelector("img"); // Double-check: using 'img' instead of 'Image'
-        
-        if (!image) {
-          console.error("No image found in element", elem);
-          return;
-        }
-
+        const image = elem.querySelector("img");
         const tl = gsap.timeline();
         const xTransform = gsap.utils.random(-100, 100);
 
@@ -91,22 +68,22 @@ const Hero = () => {
             scrub: true,
           }
         });
-
-        // Double-check: Log animation details
-        console.log("Animation set for element:", elem);
-        console.log("Image found:", image);
-        console.log("Timeline created:", tl);
       });
     }
 
-    // Cleanup function
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initializeAnimations);
+    } else {
+      initializeAnimations();
+    }
+
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 
   return (
-    <div className='w-full pt-40 relative'>
+    <div className='w-full pt-40 relative overflow-x-hidden'>
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 grid-rows-5 gap-2 sm:gap-4 w-full h-full p-4 sm:p-8 relative z-10">
         {gridItems.map((item, index) => (
           <div
@@ -130,7 +107,7 @@ const Hero = () => {
       </div>
       <div className="fixed top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-50 text-white z-20">
         <h1 className="bg-clip-text font-bold text-transparent bg-gradient-to-r from-yellow-400 to-orange-500 text-7xl md:text-[100px]">Explore Bangladesh</h1>
-        <p className="text-xl md:text-2xl">Discover amazing destinations with TravelX</p>
+        <p className="text-lg md:text-2xl">Discover amazing destinations with TravelX</p>
       </div>
       <div className="min-h-screen z-30 p-6 rounded-lg shadow-lg mx-auto mt-8 relative flex flex-col md:flex-row items-center justify-center">
         <video
@@ -139,17 +116,16 @@ const Hero = () => {
           loop
           muted
           playsInline
-          className="absolute top-0 left-0 w-full h-full object-cover md:object-cover z-0"
+          className="absolute top-0 left-0 w-full h-full object-cover z-0"
         >
           <source src="/images/waves.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <div className="relative z-10  mx-auto text-center bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg p-8 rounded-lg flex flex-col items-center justify-center mb-8 md:mb-0 md:mr-8">
+        <div className="relative z-10 mx-auto text-center bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg p-8 rounded-lg flex flex-col items-center justify-center mb-8 md:mb-0 md:mr-8">
           <div className="mb-12 w-full">
             <span data-aos='fade-up' className='text-xl font-bold text-white'>Our Holiday Packages</span>
             <div className='bg-[#387D96] rounded-xl px-2'>
-
-            <h1 data-aos='fade-up' className='text-2xl md:text-6xl bg-clip-text font-bold text-transparent bg-gradient-to-r from-yellow-400 to-orange-500 mt-4 rounded-xl py-2'>Travel To Your Beloved <br /> Destination</h1>
+              <h1 data-aos='fade-up' className='text-2xl md:text-6xl bg-clip-text font-bold text-transparent bg-gradient-to-r from-yellow-400 to-orange-500 mt-4 rounded-xl py-2'>Travel To Your Beloved <br /> Destination</h1>
             </div>
           </div>
           <div data-aos='fade-up' className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
@@ -201,23 +177,31 @@ const Hero = () => {
             <h2 className="text-2xl font-bold text-white mb-4">Popular Destinations</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {['Cox\'s Bazar', 'Sundarbans', 'Sajek Valley', 'Saint Martin'].map((place, index) => (
-                <div key={index} className="bg-[#387D96] bg-opacity-20 p-4 rounded-lg text-white hover:bg-opacity-30 transition duration-300 cursor-pointer">
-                  {place}
+                <div key={index} className="relative w-full h-24 md:h-32 rounded-lg overflow-hidden">
+                  <Image
+                    src={`/images/destinations/${place.toLowerCase().replace(/\s+/g, '-')}.jpg`}
+                    alt={place}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    className="rounded-lg"
+                  />
+                  <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 text-white p-2 text-center">
+                    {place}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
-      
+      </div>
+      <div className='z-50 flex items-center justify-center mt-10'>
+        <Destination />
       </div>
       <div className='z-50 flex items-center justify-center'>
-      <Destination/>
+        <Services />
       </div>
       <div className='z-50 flex items-center justify-center'>
-      <Services/>
-      </div>
-      <div className='z-50 flex items-center justify-center'>
-        <Tours/>
+        <Tours />
       </div>
     </div>
   );

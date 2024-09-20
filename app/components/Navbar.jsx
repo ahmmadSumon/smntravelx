@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import Link from 'next/link';
@@ -16,6 +16,7 @@ const Navbar = () => {
         opacity: 1,
         ease: "power3.inOut",
       });
+      document.body.style.overflow = 'hidden'; // Disable scrolling on body when menu is open
     } else {
       gsap.to(menuRef.current, {
         duration: 0.5,
@@ -23,6 +24,7 @@ const Navbar = () => {
         opacity: 0,
         ease: "power3.inOut",
       });
+      document.body.style.overflow = 'auto'; // Re-enable scrolling on body when menu is closed
     }
   }, [isOpen]);
 
